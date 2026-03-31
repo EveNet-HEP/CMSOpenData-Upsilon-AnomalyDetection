@@ -87,9 +87,20 @@ output:
   plotdir: [minor plot path]
   storedir: [results path]
 ```
+### Step 3: Anomaly Detection Analysis
+#### 3.1 Generate script
+```aiignore
+python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir /pscratch/sd/t/tihsu/tmp/ --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+```
+#### 3.2 Data Preparation
+The script `[farm]/prepare.sh` would perform dataset preparation. It consists of following commands.
+```aiignore
+sh prepare.sh
+```
+
 Run:
 ```bash
-python3 00prepare_data.py config/workflow.yaml
+python3 00prepare_CMSOpenData.py config/workflow.yaml
 ```
 
 The processed outputs will be written under:
@@ -98,7 +109,6 @@ The processed outputs will be written under:
 OS: [results path]/[tag]-result/[SR|SB]/data.parquet
 SS: [results path]/[tag]-result_no_signal/[SR|SB]/data.parquet
 ```
-
 
 
 ## References
