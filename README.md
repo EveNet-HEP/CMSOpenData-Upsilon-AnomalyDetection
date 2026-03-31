@@ -15,20 +15,22 @@ The first step is to prepare the data for analysis. This involves:
 
 We follow the data preparation steps outlined in the original `dimuonAD` repository to stay consistent with that workflow. The processed data files are provided on [Zenodo](https://zenodo.org/records/14618719).
 
-Prepare the GitHub repository:
+Prepare the upstream repository:
 
 ```bash
 git clone https://github.com/hep-lbdl/dimuonAD.git
 cd dimuonAD/
 ```
 
-Modify `workflow.yaml`:
+Modify `workflow.yaml` in `dimuonAD`:
 
 ```yaml
 file_paths:
     working_dir: [dimuonAD repository path]
     data_storage_dir: [data storage directory path]
 ```
+
+If you plan to run the scripts in this repository as well, update the same paths in `config/data_config.yaml`.
 
 Download the data files from the Zenodo link above and place them in the specified `data_storage_dir`:
 
@@ -42,23 +44,27 @@ unzip *.zip
 ```
 
 After that, run the `dimuonAD` workflow using the paths you set in `workflow.yaml`.
-```aiignore
- python3 01_concatenate_and_filter_data.py
+
+If you need the environment and package setup first, complete Step 1 and then return to this step.
+
+The output files from the `dimuonAD` preprocessing step will be saved under:
+
+```text
+[data storage path]/compiled_data/lowmass/skimmed_data_2016H_30555_nojet
 ```
-Output files will be saved as `[data storage path]/compiled_data/lowmass/skimmed_data_2016H_30555_nojet`
 
 ### Step 1: Installation
-After preparing the data, you can run our analysis code.
+After preparing the data, you can set up the environment for this repository and run the analysis code.
 ```bash
 git clone https://github.com/EveNet-HEP/CMSOpenData-Upsilon-AnomalyDetection.git
 cd CMSOpenData-Upsilon-AnomalyDetection
 git clone --recursive https://github.com/EveNet-HEP/EveNet-Full.git
 ```
-Set up the environment path
+Set up the environment path:
 ```bash
 source src.sh
 ```
-To run the analysis, you need to install the required Python packages. You can do this using pip:
+To run the analysis, install the required Python packages:
 ```bash
 conda create --prefix [path] python=3.12
 conda activate [path]
@@ -66,7 +72,19 @@ pip3 install -r requirements.txt
 ```
 
 ### Step 2: Data Reformatting
-The next step is to reformat the data into a format suitable for our analysis. 
+The next step is to reformat the data into a format suitable for our analysis.
+
+Run:
+
+```bash
+python 00prepare_data.py config/workflow.yaml
+```
+
+The processed outputs will be written under:
+
+```text
+[data storage path]/projects/upsilon_iso_12_03/processed_data/
+```
 
 
 
