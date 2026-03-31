@@ -25,7 +25,7 @@ from helpers.utils import save_file, get_latest_file_in_dir
 
 from rich.progress import Progress, BarColumn, TimeRemainingColumn
 
-from preprocessing.preprocess import unflatten_dict
+from evenet.dataset.preprocess import unflatten_dict, flatten_dict
 from functools import partial
 import random
 

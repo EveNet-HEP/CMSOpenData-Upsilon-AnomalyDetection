@@ -178,6 +178,7 @@ def prepare_script(args):
 
     train_command_file = os.path.abspath(os.path.join(args.farm, "train_commands.txt"))
     submit_script = os.path.abspath(os.path.join(cwd, "script", "submit_multiple_ray.sh"))
+    cpu_submit_script = os.path.abspath(os.path.join(cwd, "script", "run_on_ncpus.sh"))
     tasks_per_node = max(1, int(args.total_gpu / args.gpu))
 
     f_train.write(f'train_command_file="{train_command_file}"\n')
@@ -222,10 +223,16 @@ def prepare_script(args):
 
     with open(f"{args.farm}/run-train_cls.sh", "w") as f:
         f.write("#!/bin/bash\n")
-        f.write(f"sh ~/script/run_on_128cpus_ncpu.sh --cpus-per-task 4 {os.path.abspath(args.farm)}/train_cls.sh \n")
+        f.write(
+            f'sh "{cpu_submit_script}" --cpus-per-task 4 '
+            f'{os.path.abspath(args.farm)}/train_cls.sh\n'
+        )
     with open(f"{args.farm}/run-summary.sh", "w") as f:
         f.write("#!/bin/bash\n")
-        f.write(f"sh ~/script/run_on_128cpus_ncpu.sh --cpus-per-task {args.cpu} {os.path.abspath(args.farm)}/summary.sh \n")
+        f.write(
+            f'sh "{cpu_submit_script}" --cpus-per-task {args.cpu} '
+            f'{os.path.abspath(args.farm)}/summary.sh\n'
+        )
 def main():
     # Set up argument parser
     parser = argparse.ArgumentParser()

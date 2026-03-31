@@ -77,6 +77,8 @@ To run the analysis, install the required Python packages:
 conda create --prefix [path] python=3.12
 conda activate [path]
 pip3 install -r requirements.txt
+# better to install zfit independently to avoid potential version conflicts with other packages
+pip3 install zfit==0.22.0
 ```
 
 Pull the Docker image for the EveNet training:
@@ -180,7 +182,7 @@ The relevant farm directories, i.e. `[farm]-gen` and `[farm]-gen-nosignal`, will
 #### 3.3 Train the generative model
 
 The training script is located at `[farm]/train.sh`. Run the following command to start the training:
-##### Full Training [Optional]
+##### Full Training [Optional, on slurm]
 ```bash
 sh [farm]/train.sh
 ```
@@ -191,9 +193,28 @@ Please note that `[farm]/train.sh` uses `script/submit_multiple_ray.sh` to perfo
 sh Farm-pretrain-gen/boostrap-0/train.sh
 sh Farm-pretrain-gen-nosignal/boostrap-0/train.sh
 ```
-
+The command will look like:
+```aiignore
+cd /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/EveNet-Full;
+shifter --image=docker:avencast1994/evenet:1.5 python3 scripts/train.py [training.yaml] --load_all --ray_dir [tmp dir]
+```
 
 #### 3.4 Generate Paeudo-data and evaluate the model
+##### Full Training [Optional, on slurm]
+Use parallel scripts to generate pseudo-data.
+```bash
+sh [farm]/run-predict.sh
+```
+##### Local mini-run
+```bash
+sh [farm]/predict.sh
+```
+This is typically run the signal region (SR) pseudo-data generation. The command will look like:
+```aiignore
+python3 01predict_SR_certain_fold.py [workflow.yaml] --region SR --checkpoint [check point]  --gen_num_events [nEvent] --ngpu 1 --rank 0 --fold 0
+```
+
+#### 3.5 Train Weak Supervision Classifier and evaluate the results
 
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
