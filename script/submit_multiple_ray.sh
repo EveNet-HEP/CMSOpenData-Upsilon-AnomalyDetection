@@ -69,7 +69,7 @@ for COMMANDS_FILE in "${COMMANDS_FILES[@]}"; do
     [[ -z "$cmd" ]] && continue
 
     echo -e "${GRN}➡️  Submitting:${RST} $cmd"
-    shifter ray job submit --address="$RAY_ADDRESS" -- bash -c "$cmd" &
+    ray job submit --address="$RAY_ADDRESS" -- bash -c "$cmd" &
     pids+=($!)
     
 
