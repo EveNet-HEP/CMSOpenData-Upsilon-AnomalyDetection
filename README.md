@@ -79,6 +79,13 @@ conda activate [path]
 pip3 install -r requirements.txt
 ```
 
+Pull the Docker image for the EveNet training:
+```aiignore
+shifterimg -v pull docker:avencast1994/evenet:1.5
+```
+
+```bash
+
 ### Step 2: Data Reformatting
 
 The next step is to reformat the data into a format suitable for our analysis.
@@ -89,6 +96,7 @@ Before running, update the paths in `config/data_config.yaml`:
 file_paths:
     working_dir: [dimuonAD repository path]
     data_storage_dir: [data storage directory path]
+
 ```
 
 Then update `config/workflow.yaml`:
@@ -97,6 +105,7 @@ Then update `config/workflow.yaml`:
 output:
   plotdir: [plot path]
   storedir: [results path]
+image: 'docker:avencast1994/evenet:1.5'
 ```
 
 And config the `config/full_train.yaml`
@@ -108,6 +117,10 @@ options:
 Most of the paths are temparary and will be overwritten by the scripts in the next steps, but make sure to set the `pretrain_model_load_path` to our release accordingly.
 Also remember to set the `config/options.yaml` to use the correct learning rate.
 
+Update the `src.sh` wandb api key
+```aiignore
+export WANDB_API_KEY=[your wandb api key]
+```
 ### Step 3: Anomaly Detection Analysis
 
 #### 3.1 Generate scripts

@@ -36,7 +36,7 @@ def prepare_script(args):
         if args.local:
             command.append(f"cd {abs_evenet_dir}; python3 scripts/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
         else:
-            command.append(f"shifter  --image={args.image} python3 scripts/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
+            command.append(f"cd {abs_evenet_dir}; shifter --image={args.image} python3 scripts/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
 
     # Write the command to a shell script
     script_path = os.path.join(args.farm, "train.sh")

@@ -176,7 +176,7 @@ def prepare_script(args):
         f_prepare.write(") & \n")
 
     f_train.write(f'cd {control["workdir"]}\n')
-    f_train.write(f'sh ~/script/submit_multiple_ray.sh -p {int(16/args.gpu)} {" ".join(train_list)}\n')
+    f_train.write(f'sh script/submit_multiple_ray.sh -p {int(args.total_gpu/args.gpu)} {" ".join(train_list)}\n')
 
     f_prepare.close()
     f_train.close()
@@ -207,6 +207,7 @@ def main():
     parser.add_argument("--ray_dir", type = str, default = "/pscratch/sd/t/tihsu/tmp")
     parser.add_argument("--gen_events", type = int, default = 102400)
     parser.add_argument("--cpu", type = int, default = 10, help="Number of CPUs per task")
+    parser.add_argument("--total-gpu", type=int, default = 1)
     parser.add_argument("--gpu", type = int, default = 1)
     parser.add_argument("--max_background", type = int, default = 40000)
     parser.add_argument("--k", type = int, default = 3)
