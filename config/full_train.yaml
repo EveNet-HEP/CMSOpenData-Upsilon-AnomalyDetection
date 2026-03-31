@@ -62,7 +62,7 @@ options:
     model_checkpoint_load_path: null
     model_checkpoint_save_path: /pscratch/sd/t/tihsu/database/EveNet-AnomalyDetection-CMSOpenData-ip3d-paper-pretrain-EPS-v6/EveNetInput/SB/model_checkpoint
     patience: 1000
-    pretrain_model_load_path: /global/cfs/cdirs/m5019/avencast/Checkpoints/checkpoints.20M.ablation.4.newcls/checkpoints.20M.ablation.4.abl.newcls/last.ckpt
+    pretrain_model_load_path: /global/cfs/cdirs/m5019/avencast/Checkpoints/checkpoints.20M.ablation.4.newcls/last.ckpt
   default: options.yaml
 platform:
   batch_size: 4096

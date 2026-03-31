@@ -163,6 +163,10 @@ The relavant farm i.e. `[farm]-gen`, `[farm]-gen-nosignal` will also be created.
 
 #### 3.3 Train the generative model
 The training script is located at `[farm]/train.sh`. Run the following command to start the training:
+```aiignore
+sh train.sh
+```
+Please note that the 
 
 ```bash
 
