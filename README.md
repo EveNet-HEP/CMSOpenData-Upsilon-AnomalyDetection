@@ -54,19 +54,25 @@ The output files from the `dimuonAD` preprocessing step will be saved under:
 ```
 
 ### Step 1: Installation
+
 After preparing the data, install this repository and set up the environment for the analysis code.
+
 ```bash
 git clone https://github.com/EveNet-HEP/CMSOpenData-Upsilon-AnomalyDetection.git
 cd CMSOpenData-Upsilon-AnomalyDetection
 git clone --recursive https://github.com/EveNet-HEP/EveNet-Full.git
 ```
+
 After cloning this repository, update `config/data_config.yaml` to use the same `working_dir` and `data_storage_dir` paths as in the upstream `dimuonAD` `workflow.yaml`.
 
 Set up the environment path:
+
 ```bash
 source src.sh
 ```
+
 To run the analysis, install the required Python packages:
+
 ```bash
 conda create --prefix [path] python=3.12
 conda activate [path]
@@ -74,33 +80,48 @@ pip3 install -r requirements.txt
 ```
 
 ### Step 2: Data Reformatting
+
 The next step is to reformat the data into a format suitable for our analysis.
-Before running, set up the path in `config/data_config.yaml` to be our path
+
+Before running, update the paths in `config/data_config.yaml`:
+
 ```yaml
 file_paths:
     working_dir: [dimuonAD repository path]
     data_storage_dir: [data storage directory path]
 ```
-And then `config/workflow.yaml` to be
+
+Then update `config/workflow.yaml`:
+
 ```yaml
 output:
-  plotdir: [minor plot path]
+  plotdir: [plot path]
   storedir: [results path]
 ```
+
 ### Step 3: Anomaly Detection Analysis
-#### 3.1 Generate script
-As the analysis consist of several boostrap & k-fold training. We use `Make_Script.py` to generate the pipeline in the `[farm]` directory. The command is:
-```aiignore
+
+#### 3.1 Generate scripts
+
+Since the analysis consists of several bootstrap and k-fold training steps, we use `Make_Script.py` to generate the pipeline under the `[farm]` directory. The command is:
+
+```bash
 # Quick run for testing
-python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir /pscratch/sd/t/tihsu/tmp/ --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
-#### 3.2 Data Preparation
-The script `[farm]/prepare.sh` would perform dataset preparation for different boostrap.
-```aiignore
+
+#### 3.2 Data preparation
+
+The script `[farm]/prepare.sh` performs dataset preparation for different bootstrap runs:
+
+```bash
 sh prepare.sh
 ```
+
 ##### 3.2 Details
-The function `prepare.sh` acutally runs the code:
+
+The `prepare.sh` script actually runs:
+
 ```bash
 python3 00prepare_CMSOpenData.py [workflow yaml]
 ```
@@ -111,6 +132,14 @@ The processed outputs will be written under:
 OS: [results path]/[tag]-result/[SR|SB]/data.parquet
 SS: [results path]/[tag]-result_no_signal/[SR|SB]/data.parquet
 ```
+
+`03kfold_train.py` then creates the k-fold training configuration files under the farm directory, which are used in the next step:
+
+```bash
+python3 03kfold_train.py [workflow.yaml] --fold 2 --ray_dir [tmp dir] --farm [farm/tag] --local
+```
+The relavant farm i.e. `[farm]-gen`, `[farm]-gen-nosignal` will also be created.
+
 
 
 ## References
