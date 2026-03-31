@@ -59,7 +59,6 @@ Set up the environment path
 source src.sh
 ```
 To run the analysis, you need to install the required Python packages. You can do this using pip:
-
 ```bash
 conda create --prefix [path] python=3.12
 conda activate [path]
