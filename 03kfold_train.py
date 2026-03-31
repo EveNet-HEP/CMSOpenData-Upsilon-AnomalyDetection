@@ -15,7 +15,7 @@ def prepare_script(args):
     init = 0.0
     step = 1.0 / args.fold
 
-    abs_evenet_dir = os.abspath(args.evenet_dir)
+    abs_evenet_dir = os.path.abspath(args.evenet_dir)
 
     original_wandb_run_name = config['logger']['wandb']['run_name']
     for ifold in range(args.fold):
