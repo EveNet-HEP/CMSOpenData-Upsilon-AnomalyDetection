@@ -50,11 +50,14 @@ Output files will be saved as `[data storage directory path]/compiled_data/lowma
 ### Step 1: Installation
 After preparing the data, you can run our analysis code.
 ```bash
-git clone 
-
+git clone https://github.com/EveNet-HEP/CMSOpenData-Upsilon-AnomalyDetection.git
+cd CMSOpenData-Upsilon-AnomalyDetection
 ```
 To run the analysis, you need to install the required Python packages. You can do this using pip:
 
 ```bash
-
+conda create --prefix [path] python=3.12
+conda activate [path]
+pip3 install -r requirements.txt
+```
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
