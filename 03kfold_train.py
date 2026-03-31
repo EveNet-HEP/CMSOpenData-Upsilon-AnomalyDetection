@@ -34,9 +34,9 @@ def prepare_script(args):
             yaml.dump(fold_config, f)
 
         if args.local:
-            command.append(f"cd {abs_evenet_dir}; python3 evenet/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
+            command.append(f"cd {abs_evenet_dir}; python3 scripts/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
         else:
-            command.append(f"shifter python3 evenet/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
+            command.append(f"shifter  --image={args.image} python3 scripts/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
 
     # Write the command to a shell script
     script_path = os.path.join(args.farm, "train.sh")
@@ -56,6 +56,7 @@ def main():
     parser.add_argument("--ray_dir", type=str, default = "~/ray_results")
     parser.add_argument("--local", action='store_true', help="Run locally without shifter")
     parser.add_argument("--evenet-dir", type=str, default = "EveNet-Full")
+    parser.add_argument("--image", type=str)
     # Parse command-line arguments
     args = parser.parse_args()
     # Explore the provided HDF5 file

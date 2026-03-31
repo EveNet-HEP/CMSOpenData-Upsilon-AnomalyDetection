@@ -10,6 +10,8 @@ output:
   plotdir: 'results/paper-pretrain'
   storedir: '/pscratch/sd/t/tihsu/test_AD/pretrain-result'
 
+image: 'docker:avencast1994/evenet:1.5'
+
 train:
   config: 'full_train.yaml'
 train-cls:
