@@ -85,7 +85,7 @@ And then `config/workflow.yaml` to be
 ```yaml
 output:
   plotdir: [minor plot path]
-  storedir: [major results path]
+  storedir: [results path]
 ```
 Run:
 ```bash
@@ -95,10 +95,9 @@ python3 00prepare_data.py config/workflow.yaml
 The processed outputs will be written under:
 
 ```text
-[data storage path]/projects/upsilon_iso_12_03/processed_data/
+OS: [results path]/[tag]-result_no_signal/[SR|SB]/data.parquet
+SS: [results path]/[tag]-result/[SR|SB]/data.parquet
 ```
-
-
 
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
