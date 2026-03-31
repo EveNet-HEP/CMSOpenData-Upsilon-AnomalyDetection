@@ -99,6 +99,15 @@ output:
   storedir: [results path]
 ```
 
+And config the `config/full_train.yaml`
+```yaml
+options:
+  Training:
+    pretrain_model_load_path: [your downloaded model path]
+```
+Most of the paths are temparary and will be overwritten by the scripts in the next steps, but make sure to set the `pretrain_model_load_path` to our release accordingly.
+Also remember to set the `config/options.yaml` to use the correct learning rate.
+
 ### Step 3: Anomaly Detection Analysis
 
 #### 3.1 Generate scripts
