@@ -84,7 +84,7 @@ Pull the Docker image for the EveNet training:
 shifterimg -v pull docker:avencast1994/evenet:1.5
 ```
 
-### Step 2: Data Reformatting
+### Step 2: Configuration Setting
 
 The next step is to reformat the data into a format suitable for our analysis.
 
