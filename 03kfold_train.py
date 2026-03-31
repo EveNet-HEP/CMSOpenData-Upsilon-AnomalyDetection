@@ -15,6 +15,8 @@ def prepare_script(args):
     init = 0.0
     step = 1.0 / args.fold
 
+    abs_evenet_dir = os.abspath(args.evenet_dir)
+
     original_wandb_run_name = config['logger']['wandb']['run_name']
     for ifold in range(args.fold):
         file_path = os.path.join(work_dir, args.farm, f"fold_{ifold}.yaml")
@@ -32,7 +34,7 @@ def prepare_script(args):
             yaml.dump(fold_config, f)
 
         if args.local:
-            command.append(f"cd /global/u1/t/tihsu/EveNet; python3 evenet/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
+            command.append(f"cd {abs_evenet_dir}; python3 evenet/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
         else:
             command.append(f"shifter python3 evenet/train.py {file_path} --load_all --ray_dir {args.ray_dir}")
 
@@ -53,6 +55,7 @@ def main():
     parser.add_argument("--fold", type = int, default = 5)
     parser.add_argument("--ray_dir", type=str, default = "~/ray_results")
     parser.add_argument("--local", action='store_true', help="Run locally without shifter")
+    parser.add_argument("--evenet-dir", type=str, default = "EveNet-Full")
     # Parse command-line arguments
     args = parser.parse_args()
     # Explore the provided HDF5 file

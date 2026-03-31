@@ -117,8 +117,7 @@ The script `[farm]/prepare.sh` performs dataset preparation for different bootst
 ```bash
 sh prepare.sh
 ```
-
-##### 3.2 Details
+#####  Details
 
 The `prepare.sh` script actually runs:
 
@@ -140,7 +139,10 @@ python3 03kfold_train.py [workflow.yaml] --fold 2 --ray_dir [tmp dir] --farm [fa
 ```
 The relavant farm i.e. `[farm]-gen`, `[farm]-gen-nosignal` will also be created.
 
+#### 3.3 Train the generative model
+The training script is located at `[farm]/train.sh`. Run the following command to start the training:
 
+```bash
 
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
