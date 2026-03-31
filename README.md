@@ -129,7 +129,7 @@ Since the analysis consists of several bootstrap and k-fold training steps, we u
 
 ```bash
 # Quick run for testing
-python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
 
 #### 3.2 Data preparation

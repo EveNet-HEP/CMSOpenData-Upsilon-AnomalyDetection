@@ -175,7 +175,7 @@ def prepare_script(args):
 
         f_prepare.write(") & \n")
 
-    f_train.write(f'cd {control["workdir"]}\n')
+    # f_train.write(f'cd {control["workdir"]}\n')
     f_train.write(f'sh script/submit_multiple_ray.sh -p {int(args.total_gpu/args.gpu)} {" ".join(train_list)}\n')
 
     f_prepare.close()
