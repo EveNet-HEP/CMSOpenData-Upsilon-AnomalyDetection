@@ -1,0 +1,1 @@
+export PYTHONPATH=$(pwd)/EveNet-Full:$PYTHONPATH
