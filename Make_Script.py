@@ -28,6 +28,7 @@ def prepare_script(args):
 
     f_train = open(f"{args.farm}/train.sh", "w")
     f_train.write("#!/bin/bash\n")
+    f_train.write("set -euo pipefail\n")
 
     f_predict = open(f"{args.farm}/predict.sh", "w")
 
@@ -175,8 +176,33 @@ def prepare_script(args):
 
         f_prepare.write(") & \n")
 
-    # f_train.write(f'cd {control["workdir"]}\n')
-    f_train.write(f'sh script/submit_multiple_ray.sh -p {int(args.total_gpu/args.gpu)} {" ".join(train_list)}\n')
+    train_command_file = os.path.abspath(os.path.join(args.farm, "train_commands.txt"))
+    submit_script = os.path.abspath(os.path.join(cwd, "script", "submit_multiple_ray.sh"))
+    tasks_per_node = max(1, int(args.total_gpu / args.gpu))
+
+    f_train.write(f'train_command_file="{train_command_file}"\n')
+    f_train.write("train_sources=(\n")
+    for train_script in train_list:
+        f_train.write(f'"{train_script}"\n')
+    f_train.write(")\n")
+    f_train.write('> "$train_command_file"\n')
+    f_train.write('for src in "${train_sources[@]}"; do\n')
+    f_train.write('  if [ ! -f "$src" ]; then\n')
+    f_train.write('    echo "Missing generated train script: $src" >&2\n')
+    f_train.write('    echo "Run [farm]/prepare.sh first to generate the k-fold training scripts." >&2\n')
+    f_train.write('    exit 1\n')
+    f_train.write('  fi\n')
+    f_train.write('  cat "$src" >> "$train_command_file"\n')
+    f_train.write("  printf '\\n' >> \"$train_command_file\"\n")
+    f_train.write('done\n')
+    f_train.write('if [ ! -s "$train_command_file" ]; then\n')
+    f_train.write('  echo "No training commands were generated." >&2\n')
+    f_train.write('  exit 1\n')
+    f_train.write('fi\n')
+    f_train.write(
+        f'sh "{submit_script}" --gpus-per-task {args.gpu} --ntasks 1 '
+        f'--tasks-per-node {tasks_per_node} "$train_command_file"\n'
+    )
 
     f_prepare.close()
     f_train.close()

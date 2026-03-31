@@ -20,12 +20,13 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 usage() {
-    echo -e "${RED}Usage: $0 [options] <command_file>${NC}"
+    echo -e "${RED}Usage: $0 [options] <command_file> [command_file ...]${NC}"
     echo "Options:"
     echo "  --gpus-per-task N   (Default: $GPUS_PER_TASK)"
     echo "  --gpus-per-node N   (Default: $GPUS_PER_NODE)"
     echo "  --ntasks N          (Critical! Set '1' for torchrun/deepspeed. Default: Same as GPU count)"
     echo "  --total-nodes N     (Auto-detect if empty)"
+    echo "  -p, --tasks-per-node N"
     echo "  --dry-run           (Print what would happen without running)"
     exit 1
 }
@@ -38,14 +39,14 @@ while [[ "$1" =~ ^- ]]; do
         --ntasks)        shift; NTASKS_PARAM="$1" ;;
         --total-nodes)   shift; TOTAL_NODES_ALLOC="$1" ;;
         --dry-run)       DRY_RUN=1 ;;
-        --tasks-per-node) shift; TASKS_PER_NODE="$1" ;; # Add this case
+        --tasks-per-node|-p) shift; TASKS_PER_NODE="$1" ;;
         *) usage ;;
     esac
     shift
 done
 
-CMD_FILE="$1"
-[[ -z "$CMD_FILE" ]] && usage
+CMD_FILES=("$@")
+[[ "${#CMD_FILES[@]}" -eq 0 ]] && usage
 
 # --- Logic Setup ---
 # Default logic: If using MPI, tasks = GPUs. If torchrun, user usually wants tasks=1.
@@ -88,10 +89,22 @@ fi
 
 declare -a PIDS=()
 declare -a TASK_IDS=()
+declare -a COMMANDS=()
 
-mapfile -t COMMANDS < "$CMD_FILE"
+for cmd_file in "${CMD_FILES[@]}"; do
+    if [[ ! -f "$cmd_file" ]]; then
+        echo -e "${RED}Error: Command file not found: $cmd_file${NC}"
+        exit 1
+    fi
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        COMMANDS+=("$line")
+    done < "$cmd_file"
+done
+
 TOTAL_LINES=${#COMMANDS[@]}
 CURRENT_LINE=0
+
+mkdir -p logs
 
 # --- The Loop ---
 while : ; do
