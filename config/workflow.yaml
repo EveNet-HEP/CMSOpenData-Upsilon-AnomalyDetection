@@ -4,7 +4,7 @@ input:
 fit:
   bkg-fit-degree: 5
 
-workdir: "/global/homes/t/tihsu/EveNet"
+workdir: "EveNet-Full"
 
 output:
   plotdir: 'results/paper-pretrain'

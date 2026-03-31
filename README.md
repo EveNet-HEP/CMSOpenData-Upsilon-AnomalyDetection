@@ -15,6 +15,8 @@ The first step is to prepare the data for analysis. This involves:
 
 We follow the data preparation steps outlined in the original `dimuonAD` repository to stay consistent with that workflow. The processed data files are provided on [Zenodo](https://zenodo.org/records/14618719).
 
+At this stage, you only need the upstream `dimuonAD` repository. This repository is not required until Step 1.
+
 Prepare the upstream repository:
 
 ```bash
@@ -29,8 +31,6 @@ file_paths:
     working_dir: [dimuonAD repository path]
     data_storage_dir: [data storage directory path]
 ```
-
-If you plan to run the scripts in this repository as well, update the same paths in `config/data_config.yaml`.
 
 Download the data files from the Zenodo link above and place them in the specified `data_storage_dir`:
 
@@ -54,12 +54,14 @@ The output files from the `dimuonAD` preprocessing step will be saved under:
 ```
 
 ### Step 1: Installation
-After preparing the data, you can set up the environment for this repository and run the analysis code.
+After preparing the data, install this repository and set up the environment for the analysis code.
 ```bash
 git clone https://github.com/EveNet-HEP/CMSOpenData-Upsilon-AnomalyDetection.git
 cd CMSOpenData-Upsilon-AnomalyDetection
 git clone --recursive https://github.com/EveNet-HEP/EveNet-Full.git
 ```
+After cloning this repository, update `config/data_config.yaml` to use the same `working_dir` and `data_storage_dir` paths as in the upstream `dimuonAD` `workflow.yaml`.
+
 Set up the environment path:
 ```bash
 source src.sh
@@ -73,11 +75,21 @@ pip3 install -r requirements.txt
 
 ### Step 2: Data Reformatting
 The next step is to reformat the data into a format suitable for our analysis.
-
+Before running, set up the path in `config/data_config.yaml` to be our path
+```yaml
+file_paths:
+    working_dir: [dimuonAD repository path]
+    data_storage_dir: [data storage directory path]
+```
+And then `config/workflow.yaml` to be
+```yaml
+output:
+  plotdir: [minor plot path]
+  storedir: [major results path]
+```
 Run:
-
 ```bash
-python 00prepare_data.py config/workflow.yaml
+python3 00prepare_data.py config/workflow.yaml
 ```
 
 The processed outputs will be written under:
