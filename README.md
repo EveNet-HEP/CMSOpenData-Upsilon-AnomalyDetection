@@ -26,7 +26,7 @@ Modify `workflow.yaml`:
 
 ```yaml
 file_paths:
-    working_dir: [github repository path]
+    working_dir: [dimuonAD repository path]
     data_storage_dir: [data storage directory path]
 ```
 
@@ -60,4 +60,6 @@ conda create --prefix [path] python=3.12
 conda activate [path]
 pip3 install -r requirements.txt
 ```
+
+## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
