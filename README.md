@@ -61,5 +61,10 @@ conda activate [path]
 pip3 install -r requirements.txt
 ```
 
+### Step 2: Data Reformatting
+The next step is to reformat the data into a format suitable for our analysis. 
+
+
+
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
