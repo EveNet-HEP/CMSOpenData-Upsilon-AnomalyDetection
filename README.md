@@ -45,7 +45,7 @@ After that, run the `dimuonAD` workflow using the paths you set in `workflow.yam
 ```aiignore
  python3 01_concatenate_and_filter_data.py
 ```
-Output files will be saved as `[data storage directory path]/compiled_data/lowmass/skimmed_data_2016H_30555_nojet`
+Output files will be saved as `[data storage path]/compiled_data/lowmass/skimmed_data_2016H_30555_nojet`
 
 ### Step 1: Installation
 After preparing the data, you can run our analysis code.
