@@ -86,8 +86,6 @@ shifterimg -v pull docker:avencast1994/evenet:1.5
 
 ### Step 2: Configuration Setting
 
-The next step is to reformat the data into a format suitable for our analysis.
-
 Before running, update the paths in `config/data_config.yaml`:
 
 ```yaml
@@ -121,6 +119,8 @@ Update the `src.sh` W&B API key. We recommend registering a W&B account and sett
 ```bash
 export WANDB_API_KEY=[your wandb api key]
 ```
+
+In `config/full_train.yaml`, you can also set the W&B project and entity name, as well as the tags for this run. The logger name will be overwritten by the script to include the tag and bootstrap information, but you can set a base name here:
 ```yaml
 logger:
   wandb:
@@ -180,19 +180,17 @@ The relevant farm directories, i.e. `[farm]-gen` and `[farm]-gen-nosignal`, will
 #### 3.3 Train the generative model
 
 The training script is located at `[farm]/train.sh`. Run the following command to start the training:
-##### Full Training
+##### Full Training [Optional]
 ```bash
 sh [farm]/train.sh
 ```
 
 Please note that `[farm]/train.sh` uses `script/submit_multiple_ray.sh` to perform parallel training. If that does not work on your machine, you can instead run the entries in `train_sources` inside `farm/train.sh` iteratively on your local setup. They will look like:
-###### Local mini-run
+##### Local mini-run
 ```bash
 sh Farm-pretrain-gen/boostrap-0/train.sh
 sh Farm-pretrain-gen-nosignal/boostrap-0/train.sh
 ```
-
-
 
 
 #### 3.4 Generate Paeudo-data and evaluate the model
