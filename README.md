@@ -4,6 +4,38 @@ This analysis uses the same data as in [1], based on the [DoubleMuon primary dat
 
 The analysis code is mostly inherited from the original code used in [1], which is available in the [`dimuonAD` repository](https://github.com/hep-lbdl/dimuonAD).
 
+## Quick Start
+
+If you only want a quick reviewer-oriented run, the shortest path is:
+
+1. Complete **Step 0** in the upstream `dimuonAD` repository and make sure the compiled data are created under:
+
+```text
+[data storage path]/compiled_data/lowmass/skimmed_data_2016H_30555_nojet
+```
+
+2. Clone this repository and install the environment in **Step 1**.
+3. Update the paths and model configuration in **Step 2**.
+4. Generate a small test pipeline:
+
+```bash
+python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 50000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+```
+
+5. Run the generated preparation script:
+
+```bash
+sh Farm-pretrain/prepare.sh
+```
+
+6. For a local smoke test, run one of the generated training scripts directly:
+
+```bash
+sh Farm-pretrain-gen/boostrap-0/train.sh
+```
+
+This is enough to check that the data reformatting, config generation, and training entry points are wired correctly. The full workflow is still somewhat environment-dependent because it assumes a Slurm/Shifter-style setup for the multi-node stages.
+
 ## Procedure
 
 ### Step 0: Data Preparation
@@ -78,7 +110,7 @@ conda create --prefix [path] python=3.12
 conda activate [path]
 pip3 install -r requirements.txt
 # better to install zfit independently to avoid potential version conflicts with other packages
-pip3 install zfit==0.22.0
+pip3 install zfit==0.22.0 # Ignore ERROR: pip's dependency...
 ```
 
 Pull the Docker image for the EveNet training:
@@ -86,7 +118,7 @@ Pull the Docker image for the EveNet training:
 shifterimg -v pull docker:avencast1994/evenet:1.5
 ```
 
-### Step 2: Configuration Setting
+### Step 2: Configuration Settings
 
 Before running, update the paths in `config/data_config.yaml`:
 
@@ -115,7 +147,7 @@ options:
 
 Most of the paths are temporary and will be overwritten by the scripts in the next steps, but make sure to set `pretrain_model_load_path` to the released model you want to use. Also remember to update `config/options.yaml` with the correct learning rate.
 
-#### wandb setting
+#### W&B Setting
 Update the `src.sh` W&B API key. We recommend registering a W&B account and setting an API key to track the training process. You can set the API key in `src.sh` or export it in your terminal:
 
 ```bash
@@ -145,7 +177,7 @@ Since the analysis consists of several bootstrap and k-fold training steps, we u
 
 ```bash
 # Quick run for testing
-python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 50000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
 
 #### 3.2 Data preparation
@@ -199,7 +231,7 @@ cd /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/EveNet-Full;
 shifter --image=docker:avencast1994/evenet:1.5 python3 scripts/train.py [training.yaml] --load_all --ray_dir [tmp dir]
 ```
 
-#### 3.4 Generate Paeudo-data and evaluate the model
+#### 3.4 Generate pseudo-data and evaluate the model
 ##### Full Training [Optional, on slurm]
 Use parallel scripts to generate pseudo-data.
 ```bash
