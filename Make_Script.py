@@ -86,9 +86,9 @@ def prepare_script(args):
                 yaml.dump(train_config, f_config, default_flow_style=False)
 
 
-        # f_prepare.write(f'python3 03kfold_train.py {os.path.abspath(control["train"]["config"].replace(".yaml", f"-boostrap-{iboostrap}.yaml"))} --fold {args.k} --ray_dir {args.ray_dir} --farm {args.farm}-gen/boostrap-{iboostrap} --local \n ')
-        # if args.no_signal:
-        #     f_prepare.write(f'python3 03kfold_train.py {os.path.abspath(control["train"]["config"].replace(".yaml", f"-boostrap-{iboostrap}-nosig.yaml"))} --fold {args.k} --ray_dir {args.ray_dir} --farm {args.farm}-gen-nosignal/boostrap-{iboostrap} --local \n')
+        f_prepare.write(f'python3 03kfold_train.py {os.path.abspath(control["train"]["config"].replace(".yaml", f"-boostrap-{iboostrap}.yaml"))} --fold {args.k} --ray_dir {args.ray_dir} --farm {args.farm}-gen/boostrap-{iboostrap} --local \n ')
+        if args.no_signal:
+            f_prepare.write(f'python3 03kfold_train.py {os.path.abspath(control["train"]["config"].replace(".yaml", f"-boostrap-{iboostrap}-nosig.yaml"))} --fold {args.k} --ray_dir {args.ray_dir} --farm {args.farm}-gen-nosignal/boostrap-{iboostrap} --local \n')
 
         os.chdir(cwd)
         train_list.append(os.path.abspath(f"{args.farm}-gen/boostrap-{iboostrap}/train.sh"))

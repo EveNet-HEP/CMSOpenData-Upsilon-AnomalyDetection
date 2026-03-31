@@ -89,18 +89,20 @@ output:
 ```
 ### Step 3: Anomaly Detection Analysis
 #### 3.1 Generate script
+As the analysis consist of several boostrap & k-fold training. We use `Make_Script.py` to generate the pipeline in the `[farm]` directory. The command is:
 ```aiignore
+# Quick run for testing
 python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir /pscratch/sd/t/tihsu/tmp/ --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
 #### 3.2 Data Preparation
-The script `[farm]/prepare.sh` would perform dataset preparation. It consists of following commands.
+The script `[farm]/prepare.sh` would perform dataset preparation for different boostrap.
 ```aiignore
 sh prepare.sh
 ```
-
-Run:
+##### 3.2 Details
+The function `prepare.sh` acutally runs the code:
 ```bash
-python3 00prepare_CMSOpenData.py config/workflow.yaml
+python3 00prepare_CMSOpenData.py [workflow yaml]
 ```
 
 The processed outputs will be written under:
