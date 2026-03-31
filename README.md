@@ -80,11 +80,9 @@ pip3 install -r requirements.txt
 ```
 
 Pull the Docker image for the EveNet training:
-```aiignore
+```bash
 shifterimg -v pull docker:avencast1994/evenet:1.5
 ```
-
-```bash
 
 ### Step 2: Data Reformatting
 
@@ -96,7 +94,6 @@ Before running, update the paths in `config/data_config.yaml`:
 file_paths:
     working_dir: [dimuonAD repository path]
     data_storage_dir: [data storage directory path]
-
 ```
 
 Then update `config/workflow.yaml`:
@@ -108,18 +105,35 @@ output:
 image: 'docker:avencast1994/evenet:1.5'
 ```
 
-And config the `config/full_train.yaml`
+Then configure `config/full_train.yaml`:
+
 ```yaml
 options:
   Training:
     pretrain_model_load_path: [your downloaded model path]
 ```
-Most of the paths are temparary and will be overwritten by the scripts in the next steps, but make sure to set the `pretrain_model_load_path` to our release accordingly.
-Also remember to set the `config/options.yaml` to use the correct learning rate.
 
-Update the `src.sh` wandb api key
-```aiignore
+Most of the paths are temporary and will be overwritten by the scripts in the next steps, but make sure to set `pretrain_model_load_path` to the released model you want to use. Also remember to update `config/options.yaml` with the correct learning rate.
+
+#### wandb setting
+Update the `src.sh` W&B API key. We recommend registering a W&B account and setting an API key to track the training process. You can set the API key in `src.sh` or export it in your terminal:
+
+```bash
 export WANDB_API_KEY=[your wandb api key]
+```
+```yaml
+logger:
+  wandb:
+    project: [your project]
+    entity: [your entity]
+    name: [will be overwritten by the script]
+    run_name: &logger_name "nominal-test"
+    tags: [ "Pretrain", "NERSC", "Multi-Node", "2700M", "SmallModel", "Vanilla", "test" ]
+    simplified: false
+  local:
+    save_dir: [log dir] # not so important
+    name: *logger_name
+    version: "test-2"
 ```
 ### Step 3: Anomaly Detection Analysis
 
@@ -129,7 +143,7 @@ Since the analysis consists of several bootstrap and k-fold training steps, we u
 
 ```bash
 # Quick run for testing
-python3 Make_Script.py config/workflow.yaml --boostrap 2 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 5000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
 
 #### 3.2 Data preparation
@@ -139,7 +153,8 @@ The script `[farm]/prepare.sh` performs dataset preparation for different bootst
 ```bash
 sh prepare.sh
 ```
-#####  Details
+
+##### Details
 
 The `prepare.sh` script actually runs:
 
@@ -159,16 +174,28 @@ SS: [results path]/[tag]-result_no_signal/[SR|SB]/data.parquet
 ```bash
 python3 03kfold_train.py [workflow.yaml] --fold 2 --ray_dir [tmp dir] --farm [farm/tag] --local
 ```
-The relavant farm i.e. `[farm]-gen`, `[farm]-gen-nosignal` will also be created.
+
+The relevant farm directories, i.e. `[farm]-gen` and `[farm]-gen-nosignal`, will also be created.
 
 #### 3.3 Train the generative model
-The training script is located at `[farm]/train.sh`. Run the following command to start the training:
-```aiignore
-sh train.sh
-```
-Please note that the 
 
+The training script is located at `[farm]/train.sh`. Run the following command to start the training:
+##### Full Training
 ```bash
+sh [farm]/train.sh
+```
+
+Please note that `[farm]/train.sh` uses `script/submit_multiple_ray.sh` to perform parallel training. If that does not work on your machine, you can instead run the entries in `train_sources` inside `farm/train.sh` iteratively on your local setup. They will look like:
+###### Local mini-run
+```bash
+sh Farm-pretrain-gen/boostrap-0/train.sh
+sh Farm-pretrain-gen-nosignal/boostrap-0/train.sh
+```
+
+
+
+
+#### 3.4 Generate Paeudo-data and evaluate the model
 
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)

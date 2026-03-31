@@ -214,8 +214,10 @@ def prepare_script(args):
     f_summary_eval.close()
     with open(f"{args.farm}/run-predict.sh", "w") as f:
         f.write("#!/bin/bash\n")
-
-        f.write(f"sh ~/script/run_on_16_gpus_ngpu.sh --gpus-per-task {args.gpu} {os.path.abspath(args.farm)}/predict.sh \n")
+        f.write(
+            f'sh "{submit_script}" --gpus-per-task 1 --ntasks 1 '
+            f'--tasks-per-node {args.total_gpu} {os.path.abspath(args.farm)}/predict.sh\n'
+        )
 
 
     with open(f"{args.farm}/run-train_cls.sh", "w") as f:
