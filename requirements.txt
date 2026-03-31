@@ -21,3 +21,4 @@ lion-pytorch==0.2.3
 transformers==4.50.3
 plotly==6.0.1
 torchJD==0.6.0
+numdifftools==0.9.41
