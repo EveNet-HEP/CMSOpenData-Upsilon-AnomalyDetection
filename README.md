@@ -52,7 +52,11 @@ After preparing the data, you can run our analysis code.
 ```bash
 git clone https://github.com/EveNet-HEP/CMSOpenData-Upsilon-AnomalyDetection.git
 cd CMSOpenData-Upsilon-AnomalyDetection
-git clone https://github.com/EveNet-HEP/EveNet-Full.git
+git clone --recursive https://github.com/EveNet-HEP/EveNet-Full.git
+```
+Set up the environment path
+```bash
+source src.sh
 ```
 To run the analysis, you need to install the required Python packages. You can do this using pip:
 
