@@ -308,7 +308,7 @@ The most time-consuming part is the generative model training and prediction, wh
 
 | **Step**            | **Hardware Configuration** | **Estimated Runtime** | **Notes** | **paper requirements** |
 |---------------------|----------------------------|-----------------------|------| ----- |
-| 3.3 Train Gen Model | 1 × A100 40GB   | ~20 mins / training   | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)|
+| 3.3 **Train Gen Model** | 1 × A100 40GB   | 20~30 mins / training  | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)|
 
 
 
