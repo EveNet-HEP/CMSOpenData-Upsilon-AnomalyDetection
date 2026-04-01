@@ -584,7 +584,7 @@ def bump_hunting(args, num_SR_bins=8, fit_degree=3, seed=42):
     cwd = os.getcwd()
     base_dir = os.path.dirname(os.path.abspath(args.config_workflow))
     os.chdir(base_dir)
-    global_config.load_yaml(config["train-cls"]["config"])
+    global_config.load_yaml(config["train"]["config"])
     with open(config["input"]["event_info"]) as f:
         event_info = yaml.safe_load(f)
     os.chdir(cwd)
@@ -766,7 +766,7 @@ def main():
     cwd = os.getcwd()
     base_dir = os.path.dirname(os.path.abspath(args.config_workflow))
     os.chdir(base_dir)
-    global_config.load_yaml(config["train-cls"]["config"])
+    global_config.load_yaml(config["train"]["config"])
     with open(config["input"]["event_info"]) as f:
         event_info = yaml.safe_load(f)
     os.chdir(cwd)

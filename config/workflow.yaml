@@ -14,8 +14,8 @@ image: 'docker:avencast1994/evenet:1.5'
 
 train:
   config: 'full_train.yaml'
-train-cls:
-  config: 'full_train_cls.yaml'
+#train-cls:
+#  config: 'full_train_cls.yaml'
 config_workflow: 'data_config.yaml'
 
 mass-windows:
