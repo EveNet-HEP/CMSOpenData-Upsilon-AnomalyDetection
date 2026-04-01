@@ -327,5 +327,10 @@ The actual runtime may vary depending on:
 * batch size and gradient accumulation. 
 Due to the smaller GPU memory on consumer hardware compared to A100 40GB, reproducing the training may require reducing the per-device batch size, which can further increase the runtime.
 
+**N.B.** To derive paper results, we highly depend on the parallelization of the training and
+prediction steps across multiple GPUs/CPUs, which is implemented in `script/submit_multiple_ray.sh` and `script/run_on_ncpus.sh`.
+If you have access to a cluster with multiple GPUs, we recommend using that for the full training.
+For local runs, we recommend using a smaller number of epochs and toy samples for testing purposes.
+
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
