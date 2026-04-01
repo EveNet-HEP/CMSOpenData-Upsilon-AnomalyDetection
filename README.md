@@ -311,6 +311,16 @@ The most time-consuming part is the generative model training and prediction, wh
 | 3.3 **Train Gen Model** | 1 × A100 40GB   | 20~30 mins / training  | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)|
 
 
+It is important to note that this table reflects the cost of a single training/prediction run only.
+The full study reported in the paper involves multiple trainings with boostrap/channel/fold, and therefore requires substantially more total compute.
+
+The actual runtime may vary depending on:
+
+* data loading and I/O performance,
+* software environment (CUDA, PyTorch, etc.),
+* mixed precision settings,
+* batch size and gradient accumulation. 
+Due to the smaller GPU memory on consumer hardware compared to A100 40GB, reproducing the training may require reducing the per-device batch size, which can further increase the runtime.
 
 ## References
 [1] Rikab Gambhir, Radha Mastandrea, Benjamin Nachman, Jesse Thaler, *Isolating Unisolated Upsilons with Anomaly Detection in CMS Open Data*, Phys. Rev. Lett. 135, 021902 (2025). DOI: [10.1103/vvv3-5kkl.135.021902](https://doi.org/10.1103/vvv3-5kkl.135.021902)
