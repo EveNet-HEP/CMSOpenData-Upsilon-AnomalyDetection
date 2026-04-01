@@ -43,7 +43,17 @@ sh Farm-gen/boostrap-0/train.sh
 ```bash
 sh Farm/predict.sh
 ```
-
+##### output
+```aiignore
+[result-dir]/boostrap_[idx]_gen/SR/data.parquet
+```
+8. Then prepare the classification dataset:
+```bash
+sh Farm/train_cls_prepare.sh
+```
+##### output
+```text
+```
 ## Procedure
 
 ### Step 0: Data Preparation

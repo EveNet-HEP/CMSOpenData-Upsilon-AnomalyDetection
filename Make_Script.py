@@ -120,7 +120,8 @@ def prepare_script(args):
 
 
         f_train_cls_prepare.write(f'python3 02prepare_classification_dataset.py {os.path.abspath(config_workflow_file)} --region SR --max_background {args.max_background * args.num_toys} {calibrated_command}\n')
-        f_train_cls_prepare.write(f'python3 02prepare_classification_dataset.py {os.path.abspath(config_workflow_file)} --region SR --no_signal --max_background {args.max_background * args.num_toys} {calibrated_command} \n')
+        if args.no_signal:
+            f_train_cls_prepare.write(f'python3 02prepare_classification_dataset.py {os.path.abspath(config_workflow_file)} --region SR --no_signal --max_background {args.max_background * args.num_toys} {calibrated_command} \n')
         f_train_cls.write(f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn --test_no_signal\n')
         f_train_cls.write(f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn --no_signal --test_no_signal\n')
 
