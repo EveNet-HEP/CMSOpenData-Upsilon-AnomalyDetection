@@ -231,7 +231,7 @@ cd /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/EveNet-Full;
 shifter --image=docker:avencast1994/evenet:1.5 python3 scripts/train.py [training.yaml] --load_all --ray_dir [tmp dir]
 ```
 
-#### 3.4 Generate pseudo-data and evaluate the model
+#### 3.4 Generate pseudo-data
 ##### Full Training [Optional, on slurm]
 Use parallel scripts to generate pseudo-data.
 ```bash
@@ -247,11 +247,11 @@ python3 01predict_SR_certain_fold.py [workflow.yaml] --region SR --checkpoint [c
 ```
 
 #### 3.5 Prepare the classification dataset for the weak supervision classifier training
-##### Full Training [Optional, on slurm]
+##### Full Training / Local run
 ```bash
 sh [farm]/train_cls_prepare.sh
 ```
-##### Local mini-run
+It is typically run the signal region (SR) dataset preparation. The command will look like:
 ```bash
 python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --max_background 10000 --calibrated
 python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --no_signal --max_background 10000 --calibrated
