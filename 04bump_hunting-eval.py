@@ -217,7 +217,7 @@ def plot_histograms_with_fits(
         if fpr_thresholds[t] in plot_fpr:
             plt.plot(plot_centers_all, parametric_fit(plot_centers_all, *result["popt"]), lw=2, linestyle="dashed", color=color)
             function_with_band(ax, parametric_fit, [SB_left, SB_right], result["popt"], result["pcov"], color=color)
-            plt.hist(result["filtered_masses"], bins=plot_bins_all, lw=10, histtype="step", color=color, label=result["label_string"], alpha=0.75)
+            plt.hist(result["filtered_masses"], bins=plot_bins_all, lw=1, histtype="step", color=color, label=result["label_string"], alpha=0.75)
             plt.scatter(plot_centers_SB, result["y_vals"], color=color)
 
         save_data["popts"].append(result["popt"])
