@@ -269,7 +269,14 @@ The command will look like:
 ```aiignore
 python3 03train_cls.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --knumber 2  --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1 --ignore pfn --test_no_signal --n_gensample 2000 --seed 108614 --calibrated
 ```
-
+#### 3.7 Final evaluation and plotting
+```bash
+sh Farm-pretrain/summary-eval.sh
+```
+This will run the final evaluation and plotting scripts, which will generate the final results and plots under
+```text
+[results path]/[tag]-result/summary/
+```
 
 
 ## References
