@@ -12,25 +12,32 @@ If you only want a quick run, here is the quick-start:
 2. Clone this repository and install the environment in [**Step 1**](###Step-1:-Installation).
 3. Update the paths and model configuration in **Step 2**.
 4. Generate a small test pipeline:
-
-
 ```bash
-python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 50000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
+# This is for quick run, the same pipeline as paper but with lower k-fold, gen-events, num_toys etc.
+python3 Make_Script.py config/workflow.yaml \
+ --boostrap 1 --farm Farm \
+ --ray_dir [tmp dir] \
+ --gen_events 50000 \
+ --gpu 1 --k 2 \
+ --max_background 2000 \
+  --total-gpu 1 \
+  --num_toys 1 \
+  --calibrated \
+  --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
-
 5. Run the generated preparation script:
-
 ```bash
-sh Farm-pretrain/prepare.sh
+# By default, it runs in the background, will take < 1 mins / boostrap to finish.
+sh Farm/prepare.sh 
 ```
-
+##### output:
+```text
+[result-dir]/boostrap_[idx]_[signal-tag]/[region]/data.parquet
+```
 6. For a local smoke test, run one of the generated training scripts directly:
-
 ```bash
-sh Farm-pretrain-gen/boostrap-0/train.sh
+sh Farm-gen/boostrap-0/train.sh
 ```
-
-This is enough to check that the data reformatting, config generation, and training entry points are wired correctly. The full workflow is still somewhat environment-dependent because it assumes a Slurm/Shifter-style setup for the multi-node stages.
 
 ## Procedure
 
@@ -175,13 +182,12 @@ logger:
     version: "test-2"
 ```
 ### Step 3: Anomaly Detection Analysis
-
 #### 3.1 Generate scripts
 
-Since the analysis consists of several bootstrap and k-fold training steps, we use `Make_Script.py` to generate the pipeline under the `[farm]` directory. The command is:
+Since the analysis consists of several bootstrap and k-fold training steps,
+we use `Make_Script.py` to generate the pipeline under the `[farm]` directory. The command is:
 
 ```bash
-# Quick run for testing
 python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 50000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
 ```
 
