@@ -24,3 +24,4 @@ torchJD==0.6.0
 numdifftools==0.9.41
 dask_awkward==2025.9.0
 jetnet==0.2.5
+pytz==2025.2
