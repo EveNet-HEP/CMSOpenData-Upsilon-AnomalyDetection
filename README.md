@@ -296,9 +296,12 @@ python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDet
 python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --no_signal  --calibrated
 python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --test_no_signal --no_signal  --calibrated
 ```
+### Output
 This will run the final evaluation and plotting scripts, which will generate the final results and plots under
-```text
+```yaml
+# Record the results i.e. significance etc.
 [outputdir]/[tag]_calibrated_fit
+# Distribution plots
 [outputdir]/[tag]_calibrated_fit/plots
 ```
 
