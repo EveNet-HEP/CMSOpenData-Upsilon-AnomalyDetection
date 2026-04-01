@@ -6,17 +6,16 @@ The analysis code is mostly inherited from the original code used in [1], which 
 
 ## Quick Start
 
-If you only want a quick reviewer-oriented run, the shortest path is:
+If you only want a quick run, here is the quick-start:
 
-1. Complete **Step 0** in the upstream `dimuonAD` repository and make sure the compiled data are created under:
-
-```text
-[data storage path]/compiled_data/lowmass/skimmed_data_2016H_30555_nojet
-```
-
-2. Clone this repository and install the environment in **Step 1**.
+1. Complete [**Step 0**](###Step 0:-Data-Preparation) to prepare the data.
+2. Clone this repository and install the environment in [**Step 1**](###Step 1:-Installation).
 3. Update the paths and model configuration in **Step 2**.
 4. Generate a small test pipeline:
+
+```aiignore
+
+```
 
 ```bash
 python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 50000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
@@ -47,7 +46,7 @@ The first step is to prepare the data for analysis. This involves:
 
 We follow the data preparation steps outlined in the original `dimuonAD` repository to stay consistent with that workflow. The processed data files are provided on [Zenodo](https://zenodo.org/records/14618719).
 
-At this stage, you only need the upstream `dimuonAD` repository. This repository is not required until Step 1.
+At this stage, you only need the upstream `dimuonAD` repository. This repository is not required until Step 1. But if you need to set up the environment and package dependencies first, you can also use `requirements.txt` in this repository.
 
 Prepare the upstream repository:
 
