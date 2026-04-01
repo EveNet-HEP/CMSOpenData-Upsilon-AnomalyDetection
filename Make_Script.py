@@ -116,15 +116,17 @@ def prepare_script(args):
         for seed in random_seed:
             f_train_cls_eval.write(
                 f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn {test_no_signal_command} --n_gensample {args.max_background} --seed {seed} {calibrated_command}\n')
-            f_train_cls_eval.write(
-                f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn --no_signal {test_no_signal_command}  --n_gensample {args.max_background} --seed {seed} {calibrated_command}\n')
+            if args.no_signal:
+                f_train_cls_eval.write(
+                    f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn --no_signal {test_no_signal_command}  --n_gensample {args.max_background} --seed {seed} {calibrated_command}\n')
 
 
         f_train_cls_prepare.write(f'python3 02prepare_classification_dataset.py {os.path.abspath(config_workflow_file)} --region SR --max_background {args.max_background * args.num_toys} {calibrated_command}\n')
         if args.no_signal:
             f_train_cls_prepare.write(f'python3 02prepare_classification_dataset.py {os.path.abspath(config_workflow_file)} --region SR --no_signal --max_background {args.max_background * args.num_toys} {calibrated_command} \n')
         f_train_cls.write(f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn {test_no_signal_command} \n')
-        f_train_cls.write(f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn --no_signal {test_no_signal_command} \n')
+        if args.no_signal:
+            f_train_cls.write(f'python3 03train_cls.py {os.path.abspath(config_workflow_file)} --knumber {args.k} {only_pc_str} {drop_str} --ignore pfn --no_signal {test_no_signal_command} \n')
 
         #
         # os.chdir(base_dir)
@@ -159,22 +161,23 @@ def prepare_script(args):
         # farm_scratch_dir = os.path.abspath(args.farm + "_scratch")
         #
 
-
-        test_no_signal_command = "--test_no_signal" if args.test_no_signal else ""
-
         f_summary.write(f'python3 04bump_hunting.py {os.path.abspath(config_workflow_file)} {"--plot_only" if args.plot_only else ""}  \n')
-        f_summary.write(f'python3 04bump_hunting.py {os.path.abspath(config_workflow_file)} {test_no_signal_command} {"--plot_only" if args.plot_only else ""}\n')
+        if args.test_no_signal:
+            f_summary.write(f'python3 04bump_hunting.py {os.path.abspath(config_workflow_file)} --test_no_signal {"--plot_only" if args.plot_only else ""}\n')
         if args.no_signal:
-            f_summary.write(f'python3 04bump_hunting.py {os.path.abspath(config_workflow_file)} {test_no_signal_command} --no_signal {"--plot_only" if args.plot_only else ""}\n')
+            if args.test_no_signal:
+                f_summary.write(f'python3 04bump_hunting.py {os.path.abspath(config_workflow_file)} --test_no_signal --no_signal {"--plot_only" if args.plot_only else ""}\n')
             f_summary.write(f'python3 04bump_hunting.py {os.path.abspath(config_workflow_file)} --no_signal {"--plot_only" if args.plot_only else ""}\n')
 
 
         # f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} {"--plot_only" if args.plot_only else ""}  \n')
         f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} {"--plot_only" if args.plot_only else ""} {calibrated_command}\n')
-        f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} {test_no_signal_command} {"--plot_only" if args.plot_only else ""} {calibrated_command}\n')
+        if args.test_no_signal:
+            f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} --test_no_signal {"--plot_only" if args.plot_only else ""} {calibrated_command}\n')
         if args.no_signal:
             f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} --no_signal {"--plot_only" if args.plot_only else ""} {calibrated_command}\n')
-            f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} {test_no_signal_command} --no_signal {"--plot_only" if args.plot_only else ""} {calibrated_command}\n')
+            if args.test_no_signal:
+                f_summary_eval.write(f'python3 04bump_hunting-eval.py {os.path.abspath(config_workflow_file)} --test_no_signal --no_signal {"--plot_only" if args.plot_only else ""} {calibrated_command}\n')
 
         # # f.write(f'python3 03kfold_train.py {cls_train_config_path} --fold {args.k} --ray_dir {args.ray_dir} --farm {args.farm} {"--local" if args.local else ""} \n')
         # # f.write(f'python3 03kfold_train.py {cls_train_scratch_path} --fold {args.k} --ray_dir {args.ray_dir} --farm {args.farm + "_scratch"} {"--local" if args.local else ""} \n')
