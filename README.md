@@ -46,7 +46,7 @@ The first step is to prepare the data for analysis. This involves:
 
 We follow the data preparation steps outlined in the original `dimuonAD` repository to stay consistent with that workflow. The processed data files are provided on [Zenodo](https://zenodo.org/records/14618719).
 
-At this stage, you only need the upstream `dimuonAD` repository. This repository is not required until Step 1. But if you need to set up the environment and package dependencies first, you can also use `requirements.txt` in this repository.
+At this stage, you only need the upstream `dimuonAD` repository. This repository is not required until Step 1. But if you need to set up the environment and package dependencies first, you can also use `requirements.txt` in our repository.
 
 Prepare the upstream repository:
 
@@ -75,8 +75,9 @@ unzip *.zip
 ```
 
 After that, run the `dimuonAD` workflow using the paths you set in `workflow.yaml`.
-
-If you need the environment and package setup first, complete Step 1 and then return to this step.
+```aiignore
+python3 01_concatenate_and_filter_data.py -run_samesign
+```
 
 The output files from the `dimuonAD` preprocessing step will be saved under:
 
