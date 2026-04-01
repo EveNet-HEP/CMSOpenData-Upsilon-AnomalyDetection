@@ -246,7 +246,17 @@ This is typically run the signal region (SR) pseudo-data generation. The command
 python3 01predict_SR_certain_fold.py [workflow.yaml] --region SR --checkpoint [check point]  --gen_num_events [nEvent] --ngpu 1 --rank 0 --fold 0
 ```
 
-#### 3.5 Train Weak Supervision Classifier and evaluate the results
+#### 3.5 Prepare the classification dataset for the weak supervision classifier training
+##### Full Training [Optional, on slurm]
+```bash
+sh [farm]/train_cls_prepare.sh
+```
+##### Local mini-run
+```bash
+python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --max_background 10000 --calibrated
+python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --no_signal --max_background 10000 --calibrated
+```
+#### 3.6 Train Weak Supervision Classifier and evaluate the results
 
 
 
