@@ -13,9 +13,6 @@ If you only want a quick run, here is the quick-start:
 3. Update the paths and model configuration in **Step 2**.
 4. Generate a small test pipeline:
 
-```aiignore
-
-```
 
 ```bash
 python3 Make_Script.py config/workflow.yaml --boostrap 1 --farm Farm-pretrain --ray_dir [tmp dir] --gen_events 50000 --gpu 1 --k 2 --max_background 2000 --no_signal --test_no_signal --total-gpu 4 --num_toys 5 --calibrated --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1
@@ -117,7 +114,12 @@ Pull the Docker image for the EveNet training:
 ```bash
 shifterimg -v pull docker:avencast1994/evenet:1.5
 ```
-
+To download the pre-trained models from [Hugging Face Hub](https://huggingface.co/Avencast/EveNet), you can use the following command (`local-dir` could be replaced with any path you want)
+```aiignore
+hf download Avencast/EveNet --local-dir pretrain-weights
+# nominal ckpt: checkpoints.20M.a4.last.ckpt
+# SSL ckpt: SSL.20M.last.ckpt
+```
 ### Step 2: Configuration Settings
 
 Before running, update the paths in `config/data_config.yaml`:
