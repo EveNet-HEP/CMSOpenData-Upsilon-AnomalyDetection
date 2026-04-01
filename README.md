@@ -257,6 +257,19 @@ python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --max_ba
 python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --no_signal --max_background 10000 --calibrated
 ```
 #### 3.6 Train Weak Supervision Classifier and evaluate the results
+#### Full Training [Optional, on slurm]
+```aiignore
+sh [farm]/run-train_cls.sh
+```
+#### Local mini-run
+```bash
+sh [farm]/train_cls.sh
+```
+The command will look like:
+```aiignore
+python3 03train_cls.py [workflow.yaml] --knumber 2  --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1 --ignore pfn --test_no_signal
+python3 03train_cls.py [workflow.yaml] --knumber 2  --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1 --ignore pfn --no_signal --test_no_signal
+```
 
 
 
