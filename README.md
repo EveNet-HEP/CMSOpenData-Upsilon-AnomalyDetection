@@ -53,7 +53,18 @@ sh Farm/train_cls_prepare.sh
 ```
 ##### output
 ```text
+[result-dir]/boostrap_[idx]_hybrid_raw_calibrated/SR/data.csv
+[result-dir]/boostrap_[idx]_hybrid_calibrated/SR/gen_performance.json
 ```
+9. Train the weak supervision classifier
+```bash
+sh Farm/train_cls-eval.sh
+```
+10. Finally, run the evaluation script to get the final results and plots:
+```bash
+sh Farm/summary-eval.sh
+```
+
 ## Procedure
 
 ### Step 0: Data Preparation
