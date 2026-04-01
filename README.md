@@ -34,9 +34,14 @@ sh Farm/prepare.sh
 ```text
 [result-dir]/boostrap_[idx]_[signal-tag]/[region]/data.parquet
 ```
-6. For a local smoke test, run one of the generated training scripts directly:
+6. For a local smoke test, run one of the generated training scripts directly, this will run the generative model training.
 ```bash
+# This may take ~1-2 hours to finish on a single GPU, depending on the model size and training epochs.
 sh Farm-gen/boostrap-0/train.sh
+```
+7. After the training is done, run the prediction script to generate pseudo-data:
+```bash
+sh Farm-gen/boostrap-0/predict.sh
 ```
 
 ## Procedure
@@ -296,6 +301,14 @@ This will run the final evaluation and plotting scripts, which will generate the
 [outputdir]/[tag]_calibrated_fit
 [outputdir]/[tag]_calibrated_fit/plots
 ```
+
+## Computing Estimates
+The experiments in this work were performed on a computing cluster with **NVIDIA A100 40GB GPUs**.
+The most time-consuming part is the generative model training and prediction, which typically takes around
+
+| **Hardware Configuration** | **Estimated Runtime** | **Notes** | ** paper requirements** |
+|----------------------------|-----------------------|------| ----- |
+| 1 × A100 40GB              | ~2 hours / training   | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)|
 
 
 ## References
