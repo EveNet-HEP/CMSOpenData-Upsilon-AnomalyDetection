@@ -27,4 +27,4 @@ jetnet==0.2.5
 pytz==2025.2
 xgboost==3.0.2
 tabpfn==6.2.0
-tabpfn_extensions==0.1.0
+tabpfn_extensions==0.1.1
