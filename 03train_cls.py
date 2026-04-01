@@ -112,17 +112,19 @@ def train(args):
     test_results_SB = []
     test_results_no_signal = []
 
-    kfold_index_no_signal = kf_SB.split(df_no_signal)
-    kfold_index_no_signal = list(kfold_index_no_signal)
+    if test_no_signal:
+        kfold_index_no_signal = kf_SB.split(df_no_signal)
+        kfold_index_no_signal = list(kfold_index_no_signal)
 
     for ifold, ((_, test_idx_SB), (train_idx, test_idx)) in enumerate(zip((kf_SB.split(df_SB)),(kf.split(X_scaled, y)))):
         df_SB_fold = df_SB.loc[test_idx_SB].copy()
         X_SB = scaler.transform(df_SB_fold.drop(columns= drop_features))
 
-        _, test_idx_no_signal = kfold_index_no_signal[ifold]
-        df_no_signal_fold = df_no_signal.loc[test_idx_no_signal].copy()
-        X_no_signal = scaler.transform(df_no_signal_fold.drop(columns= drop_features))
-        score_fold_no_signal = np.empty((X_no_signal.shape[0], args.n_ensemble))
+        if test_no_signal:
+            _, test_idx_no_signal = kfold_index_no_signal[ifold]
+            df_no_signal_fold = df_no_signal.loc[test_idx_no_signal].copy()
+            X_no_signal = scaler.transform(df_no_signal_fold.drop(columns= drop_features))
+            score_fold_no_signal = np.empty((X_no_signal.shape[0], args.n_ensemble))
 
         X_train_full, X_test = X_scaled[train_idx], X_scaled[test_idx]
         y_train_full, y_test = y[train_idx], y[test_idx]
@@ -176,7 +178,8 @@ def train(args):
 
             score_fold[:, i_tree] = bst_i.predict_proba(X_test, iteration_range=(0, best_epoch))[:, 1]
             score_fold_SB[:, i_tree] = bst_i.predict_proba(X_SB, iteration_range=(0, best_epoch))[:, 1]
-            score_fold_no_signal[:, i_tree] = bst_i.predict_proba(X_no_signal, iteration_range=(0, best_epoch))[:, 1]
+            if test_no_signal:
+                score_fold_no_signal[:, i_tree] = bst_i.predict_proba(X_no_signal, iteration_range=(0, best_epoch))[:, 1]
 
             # === NEW: Feature importance extraction ===
             booster = bst_i.get_booster()
@@ -221,13 +224,15 @@ def train(args):
 
         score_fold = np.mean(score_fold, axis=1)
         score_fold_SB = np.mean(score_fold_SB, axis=1)
-        score_fold_no_signal = np.mean(score_fold_no_signal, axis=1)
+        if test_no_signal:
+            score_fold_no_signal = np.mean(score_fold_no_signal, axis=1)
 
         # === XGBoost ===
         xgb_probs = score_fold
         xgb_probs_SB = score_fold_SB
         df_SB_fold['xgb_prob'] = xgb_probs_SB
-        df_no_signal_fold['xgb_prob'] = score_fold_no_signal
+        if test_no_signal:
+            df_no_signal_fold['xgb_prob'] = score_fold_no_signal
         fpr_xgb, tpr_xgb, _ = roc_curve(y_test, xgb_probs)
         roc_data['xgb'].append((fpr_xgb, tpr_xgb))
         auc_scores['xgb'].append(auc(fpr_xgb, tpr_xgb))
@@ -257,13 +262,15 @@ def train(args):
         # === Store results for this fold ===
         test_results.append(fold_df)
         test_results_SB.append(df_SB_fold)
-        test_results_no_signal.append(df_no_signal_fold)
+        if test_no_signal:
+            test_results_no_signal.append(df_no_signal_fold)
 
 
     # Combine all test results
     results_df = pd.concat(test_results, ignore_index=True)
     results_df_SB = pd.concat(test_results_SB, ignore_index=True)
-    results_df_no_signal = pd.concat(test_results_no_signal, ignore_index=True)
+    if test_no_signal:
+        results_df_no_signal = pd.concat(test_results_no_signal, ignore_index=True)
 
     print(results_df)
 
@@ -308,9 +315,10 @@ def train(args):
     print(final_results)
     postfix = f"-seed{args.seed}" if args.n_gensample is not None else ""
     final_results.to_csv(os.path.join(outputdir, f'final_results{postfix}.csv'), index=False)
-    print(results_df_no_signal)
-    results_df_no_signal.to_csv(os.path.join(outputdir, f'final_results_no_signal{postfix}.csv'), index=False)
-    print("✅ Results with no signal saved to final_results_no_signal.csv")
+    if test_no_signal:
+        print(results_df_no_signal)
+        results_df_no_signal.to_csv(os.path.join(outputdir, f'final_results_no_signal{postfix}.csv'), index=False)
+        print("✅ Results with no signal saved to final_results_no_signal.csv")
 
 def main():
     # Set up argument parser
