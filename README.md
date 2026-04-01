@@ -8,7 +8,7 @@ The analysis code is mostly inherited from the original code used in [1], which 
 
 If you only want a quick run, here is the quick-start:
 
-1. Complete [**Step 0**](###Step 0:-Data-Preparation) to prepare the data.
+1. Complete [**Step 0**](###Step-0:-Data-Preparation) to prepare the data.
 2. Clone this repository and install the environment in [**Step 1**](###Step 1:-Installation).
 3. Update the paths and model configuration in **Step 2**.
 4. Generate a small test pipeline:
