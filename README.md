@@ -273,9 +273,17 @@ python3 03train_cls.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/c
 ```bash
 sh Farm-pretrain/summary-eval.sh
 ```
+This is typically run the final evaluation and plotting for the signal region (SR). The command will look like:
+```aiignore
+python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml  --calibrated
+python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --test_no_signal  --calibrated
+python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --no_signal  --calibrated
+python3 04bump_hunting-eval.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --test_no_signal --no_signal  --calibrated
+```
 This will run the final evaluation and plotting scripts, which will generate the final results and plots under
 ```text
-[results path]/[tag]-result/summary/
+[outputdir]/[tag]_calibrated_fit
+[outputdir]/[tag]_calibrated_fit/plots
 ```
 
 
