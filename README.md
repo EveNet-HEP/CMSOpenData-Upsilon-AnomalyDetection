@@ -134,8 +134,8 @@ Then update `config/workflow.yaml`:
 
 ```yaml
 output:
-  plotdir: [plot path]
-  storedir: [results path]
+  plotdir: [plot path] # Just for storing aux plots during each step, not the final results
+  storedir: [results path] # The final results/checkpoints/processed data will be stored here
 image: 'docker:avencast1994/evenet:1.5'
 ```
 
@@ -144,19 +144,22 @@ Then configure `config/full_train.yaml`:
 ```yaml
 options:
   Training:
-    pretrain_model_load_path: [your downloaded model path]
+    pretrain_model_load_path: [your downloaded model path] # set null if you want to train from scratch
 ```
 
-Most of the paths are temporary and will be overwritten by the scripts in the next steps, but make sure to set `pretrain_model_load_path` to the released model you want to use. Also remember to update `config/options.yaml` with the correct learning rate.
+Most of the paths are temporary and will be overwritten by the scripts in the next steps,
+but make sure to set `pretrain_model_load_path` to the released model you want to use.
+Also remember to update `config/options.yaml` with the correct learning rate.
 
 #### W&B Setting
-Update the `src.sh` W&B API key. We recommend registering a W&B account and setting an API key to track the training process. You can set the API key in `src.sh` or export it in your terminal:
-
+Update the `src.sh` W&B API key.
+We recommend registering a W&B account and setting an API key to track the training process.
+You can also export it in your terminal instead:
 ```bash
 export WANDB_API_KEY=[your wandb api key]
 ```
-
-In `config/full_train.yaml`, you can also set the W&B project and entity name, as well as the tags for this run. The logger name will be overwritten by the script to include the tag and bootstrap information, but you can set a base name here:
+In `config/full_train.yaml`, you can also set the W&B project and entity name, as well as the tags for this run.
+The logger name will be overwritten by the script to include the tag and bootstrap information, but you can set a base name here:
 ```yaml
 logger:
   wandb:
