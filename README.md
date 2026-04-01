@@ -306,9 +306,10 @@ This will run the final evaluation and plotting scripts, which will generate the
 The experiments in this work were performed on a computing cluster with **NVIDIA A100 40GB GPUs**.
 The most time-consuming part is the generative model training and prediction, which typically takes around
 
-| **Hardware Configuration** | **Estimated Runtime** | **Notes** | ** paper requirements** |
-|----------------------------|-----------------------|------| ----- |
-| 1 × A100 40GB              | ~2 hours / training   | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)|
+| **Step**            | **Hardware Configuration** | **Estimated Runtime** | **Notes** | **paper requirements** |
+|---------------------|----------------------------|-----------------------|------| ----- |
+| 3.3 Train Gen Model | 1 × A100 40GB   | ~20 mins / training   | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)|
+
 
 
 ## References
