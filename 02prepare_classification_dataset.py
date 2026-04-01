@@ -18,7 +18,7 @@ from evenet.dataset.preprocess import process_event_batch
 from helpers.plotting import read_feature, write_feature
 from helpers.utils import save_file, save_df, analyze_mass_relation, calibrate_and_order, compare_distributions
 
-from preprocessing.preprocess import unflatten_dict
+from evenet.dataset.preprocess import unflatten_dict
 from functools import partial
 import glob
 import pandas as pd
