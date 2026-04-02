@@ -1,6 +1,6 @@
 file_paths:
-    working_dir: "/global/homes/t/tihsu/DiMuonAD/dimuonAD/"
-    data_storage_dir: "/pscratch/sd/t/tihsu/test_AD/"
+    working_dir: "[dimuon AD working dir]"
+    data_storage_dir: "[data storage dir]"
 
 analysis_keywords:
     name: "upsilon_iso_12_03"

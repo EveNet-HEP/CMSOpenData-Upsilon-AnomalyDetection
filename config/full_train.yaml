@@ -11,13 +11,13 @@ logger:
     tags: [ "Pretrain", "NERSC", "Multi-Node", "2700M", "SmallModel", "Vanilla", "test" ]
     simplified: false
   local:
-    save_dir: "/pscratch/sd/t/tihsu/log"
+    save_dir: "log"
     name: *logger_name
     version: "test-2"
 options:
   Dataset:
     dataset_limit: 1.0
-    normalization_file: /pscratch/sd/t/tihsu/database/EveNet-AnomalyDetection-CMSOpenData-ip3d-paper-pretrain-EPS-v6/EveNetInput/SB/normalization.pt
+    normalization_file: "[place holder, will be overwritten by our script]"
   ProgressiveTraining:
     stages:
     - epoch_ratio: 1.0
@@ -60,13 +60,13 @@ options:
         include: true
     epochs: 1000
     model_checkpoint_load_path: null
-    model_checkpoint_save_path: /pscratch/sd/t/tihsu/database/EveNet-AnomalyDetection-CMSOpenData-ip3d-paper-pretrain-EPS-v6/EveNetInput/SB/model_checkpoint
+    model_checkpoint_save_path: "[place holder, will be overwritten by our script]"
     patience: 1000
-    pretrain_model_load_path: /global/cfs/cdirs/m5019/avencast/Checkpoints/checkpoints.20M.ablation.4.newcls/last.ckpt
+    pretrain_model_load_path: "[your_pretrain_model.ckpt]"
   default: options.yaml
 platform:
   batch_size: 4096
-  data_parquet_dir: /pscratch/sd/t/tihsu/database/EveNet-AnomalyDetection-CMSOpenData-ip3d-paper-pretrain-EPS-v6/EveNetInput/SB
+  data_parquet_dir: "[place holder, will be overwritten by our script]"
   number_of_workers: 2
   prefetch_batches: 2
   resources_per_worker:

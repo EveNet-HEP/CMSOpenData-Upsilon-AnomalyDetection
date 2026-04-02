@@ -8,7 +8,7 @@ workdir: "EveNet-Full"
 
 output:
   plotdir: 'results/paper-pretrain'
-  storedir: '/pscratch/sd/t/tihsu/test_AD/pretrain-result'
+  storedir: '[your store path]'
 
 image: 'docker:avencast1994/evenet:1.5'
 
