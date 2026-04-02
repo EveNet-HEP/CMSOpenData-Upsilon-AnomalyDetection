@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+from pathlib import Path
+import os
 
 """
 PLOTTING KWARGS
@@ -218,6 +220,39 @@ COLUMN_WIDTH_INCHES = COLUMN_WIDTH_PX / DPI
 
 GOLDEN_RATIO = 1.618
 
+_HELPERS_DIR = Path(__file__).resolve().parent
+
+
+def _style_dirs():
+    style_dirs = [_HELPERS_DIR]
+
+    for env_var in ("DIMUONAD_HELPERS_DIR", "DIMUONAD_DIR"):
+        env_path = os.environ.get(env_var)
+        if not env_path:
+            continue
+        env_dir = Path(env_path).expanduser().resolve()
+        style_dirs.append(env_dir if env_var == "DIMUONAD_HELPERS_DIR" else env_dir / "helpers")
+
+    for parent in _HELPERS_DIR.parents:
+        sibling_dir = parent / "dimuonAD" / "helpers"
+        if sibling_dir != _HELPERS_DIR:
+            style_dirs.append(sibling_dir)
+
+    unique_dirs = []
+    for style_dir in style_dirs:
+        if style_dir not in unique_dirs:
+            unique_dirs.append(style_dir)
+    return unique_dirs
+
+
+def _use_style(local_name, fallback_style):
+    for style_dir in _style_dirs():
+        style_path = style_dir / local_name
+        if style_path.exists():
+            plt.style.use(str(style_path))
+            return
+    plt.style.use(fallback_style)
+
 def newplot(scale = None, subplot_array = None, width = None, height = None, aspect_ratio = 1,  golden_ratio = False, stamp = None, stamp_kwargs = None, use_tex = True, **kwargs):
 
 
@@ -233,15 +268,15 @@ def newplot(scale = None, subplot_array = None, width = None, height = None, asp
         fig_height = FULL_WIDTH_INCHES 
 
         if use_tex:
-            plt.style.use('/global/cfs/cdirs/m3246/rikab/dimuonAD/helpers/style_full.mplstyle')
+            _use_style("style_full.mplstyle", "default")
 
         else:
-            plt.style.use('/global/cfs/cdirs/m3246/rikab/dimuonAD/helpers/style_full_notex.mplstyle')
+            _use_style("style_full_notex.mplstyle", "default")
 
     elif scale == "column":
         fig_width = COLUMN_WIDTH_INCHES / aspect_ratio
         fig_height = COLUMN_WIDTH_INCHES 
-        plt.style.use('/global/cfs/cdirs/m3246/rikab/dimuonAD/helpers/style_column.mplstyle')
+        _use_style("style_column.mplstyle", "default")
     else:
         raise ValueError("Invalid scale argument. Must be 'full' or 'column'.")
 

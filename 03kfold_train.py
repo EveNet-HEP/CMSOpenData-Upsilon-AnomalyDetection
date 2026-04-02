@@ -4,6 +4,14 @@ import yaml
 from copy import deepcopy
 
 
+def absolutize_path(path_value, base_dir):
+    if path_value is None:
+        return None
+    if os.path.isabs(path_value):
+        return path_value
+    return os.path.abspath(os.path.join(base_dir, path_value))
+
+
 def prepare_script(args):
     os.makedirs(args.farm, exist_ok=True)
     work_dir = os.getcwd()
@@ -26,6 +34,29 @@ def prepare_script(args):
         fold_config['resonance']['default'] = os.path.join(work_dir, config_dir, fold_config['resonance']['default'])
         fold_config['options']['default'] = os.path.join(work_dir, config_dir, fold_config['options']['default'])
         fold_config['logger']['wandb']['run_name'] = f"{original_wandb_run_name}-fold{ifold}"
+
+        fold_config["platform"]["data_parquet_dir"] = absolutize_path(
+            fold_config["platform"]["data_parquet_dir"], config_dir
+        )
+        if "data_parquet_val_dir" in fold_config["platform"]:
+            fold_config["platform"]["data_parquet_val_dir"] = absolutize_path(
+                fold_config["platform"]["data_parquet_val_dir"], config_dir
+            )
+
+        fold_config["options"]["Dataset"]["normalization_file"] = absolutize_path(
+            fold_config["options"]["Dataset"]["normalization_file"], config_dir
+        )
+        fold_config["options"]["Training"]["model_checkpoint_save_path"] = absolutize_path(
+            fold_config["options"]["Training"]["model_checkpoint_save_path"], config_dir
+        )
+        if fold_config["options"]["Training"].get("model_checkpoint_load_path") is not None:
+            fold_config["options"]["Training"]["model_checkpoint_load_path"] = absolutize_path(
+                fold_config["options"]["Training"]["model_checkpoint_load_path"], config_dir
+            )
+        if fold_config["options"]["Training"].get("pretrain_model_load_path") is not None:
+            fold_config["options"]["Training"]["pretrain_model_load_path"] = absolutize_path(
+                fold_config["options"]["Training"]["pretrain_model_load_path"], config_dir
+            )
 
         fold_config["options"]["Training"]["model_checkpoint_save_path"] = os.path.join(fold_config["options"]["Training"]["model_checkpoint_save_path"], f"fold_{ifold}")
         fold_config["options"]["Dataset"]["val_split"] = [init, init + step]
