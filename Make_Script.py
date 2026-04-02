@@ -12,6 +12,14 @@ import random
 from copy import deepcopy
 
 
+def absolutize_path(path_value, base_dir):
+    if path_value is None:
+        return None
+    if os.path.isabs(path_value):
+        return path_value
+    return os.path.abspath(os.path.join(base_dir, path_value))
+
+
 def prepare_script(args):
 
     with open(args.config_workflow, 'r') as f:
@@ -56,6 +64,8 @@ def prepare_script(args):
         control['output']['plotdir'] = os.path.join(control['output']['plotdir'], f"boostrap_{iboostrap}")
         control['output']['storedir'] = os.path.join(control['output']['storedir'], f"boostrap_{iboostrap}")
         control['wandb'] = f"{control['wandb']}_boostrap_{iboostrap}"
+        control['output']['plotdir'] = absolutize_path(control['output']['plotdir'], base_dir)
+        control['output']['storedir'] = absolutize_path(control['output']['storedir'], base_dir)
 
         config_workflow_file = os.path.join(base_dir, f"control-boostrap-{iboostrap}.yaml")
         with open(config_workflow_file, 'w') as f_boost:

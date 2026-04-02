@@ -215,7 +215,7 @@ logger:
 #### 3.1 Generate scripts
 
 Since the analysis consists of several bootstrap and k-fold training steps,
-we use `Make_Script.py` to generate the pipeline under the `[farm]` directory. The command is:
+we use `Make_Script.py` to generate the pipeline under the `Farm` directory. The command is:
 
 ```bash
 python3 Make_Script.py config/workflow.yaml \
@@ -232,10 +232,10 @@ python3 Make_Script.py config/workflow.yaml \
 
 #### 3.2 Data preparation
 
-The script `[farm]/prepare.sh` performs dataset preparation for different bootstrap runs:
+The script `Farm/prepare.sh` performs dataset preparation for different bootstrap runs:
 
 ```bash
-sh prepare.sh
+sh Farm/prepare.sh
 ```
 
 ##### Details
@@ -256,24 +256,24 @@ SS: [results path]/[tag]-result_no_signal/[SR|SB]/data.parquet
 `03kfold_train.py` then creates the k-fold training configuration files under the farm directory, which are used in the next step:
 
 ```bash
-python3 03kfold_train.py [workflow.yaml] --fold 2 --ray_dir [tmp dir] --farm [farm/tag] --local
+python3 03kfold_train.py [workflow.yaml] --fold 2 --ray_dir [tmp dir] --farm Farm-gen/boostrap-0 --local
 ```
 
-The relevant farm directories, i.e. `[farm]-gen` and `[farm]-gen-nosignal`, will also be created.
+The relevant farm directories, i.e. `Farm-gen` and `Farm-gen-nosignal`, will also be created.
 
 #### 3.3 Train the generative model
 
-The training script is located at `[farm]/train.sh`. Run the following command to start the training:
+The training script is located at `Farm/train.sh`. Run the following command to start the training:
 ##### Full Training [Optional, on slurm]
 ```bash
-sh [farm]/train.sh
+sh Farm/train.sh
 ```
 
-Please note that `[farm]/train.sh` uses `script/submit_multiple_ray.sh` to perform parallel training. If that does not work on your machine, you can instead run the entries in `train_sources` inside `farm/train.sh` iteratively on your local setup. They will look like:
+Please note that `Farm/train.sh` uses `script/submit_multiple_ray.sh` to perform parallel training. If that does not work on your machine, you can instead run the entries in `train_sources` inside `Farm/train.sh` iteratively on your local setup. They will look like:
 ##### Local mini-run
 ```bash
-sh Farm-pretrain-gen/boostrap-0/train.sh
-sh Farm-pretrain-gen-nosignal/boostrap-0/train.sh
+sh Farm-gen/boostrap-0/train.sh
+sh Farm-gen-nosignal/boostrap-0/train.sh
 ```
 The command will look like:
 ```aiignore
@@ -285,11 +285,11 @@ shifter --image=docker:avencast1994/evenet:1.5 python3 scripts/train.py [trainin
 ##### Full Training [Optional, on slurm]
 Use parallel scripts to generate pseudo-data.
 ```bash
-sh [farm]/run-predict.sh
+sh Farm/run-predict.sh
 ```
 ##### Local mini-run
 ```bash
-sh [farm]/predict.sh
+sh Farm/predict.sh
 ```
 This is typically run the signal region (SR) pseudo-data generation. The command will look like:
 ```aiignore
@@ -299,7 +299,7 @@ python3 01predict_SR_certain_fold.py [workflow.yaml] --region SR --checkpoint [c
 #### 3.5 Prepare the classification dataset for the weak supervision classifier training
 ##### Full Training / Local run
 ```bash
-sh [farm]/train_cls_prepare.sh
+sh Farm/train_cls_prepare.sh
 ```
 It is typically run the signal region (SR) dataset preparation. The command will look like:
 ```bash
@@ -309,19 +309,24 @@ python3 02prepare_classification_dataset.py [workflow.yaml] --region SR --no_sig
 #### 3.6 Train Weak Supervision Classifier and evaluate the results
 #### Full Training [Optional, on slurm]
 ```aiignore
-sh [farm]/run-train_cls.sh
+sh Farm/run-train_cls.sh
 ```
 #### Local mini-run
 ```bash
-sh [farm]/train_cls-eval.sh
+sh Farm/train_cls-eval.sh
 ```
 The command will look like:
 ```aiignore
 python3 03train_cls.py /global/u1/t/tihsu/CMSOpenData-Upsilon-AnomalyDetection/config/control-boostrap-0.yaml --knumber 2  --drop pc-log_pt-0 pc-log_pt-1 pc-log_energy-0 pc-log_energy-1 pt-balance-pc deltaR-pc pc-phi-0 pc-phi-1 --ignore pfn --test_no_signal --n_gensample 2000 --seed 108614 --calibrated
 ```
 #### 3.7 Final evaluation and plotting
+If you have the `dimuonAD` repository checked out separately, set:
 ```bash
-sh Farm-pretrain/summary-eval.sh
+export DIMUONAD_DIR=/path/to/dimuonAD
+```
+
+```bash
+sh Farm/summary-eval.sh
 ```
 This is typically run the final evaluation and plotting for the signal region (SR). The command will look like:
 ```aiignore
@@ -335,6 +340,7 @@ This will run the final evaluation and plotting scripts, which will generate the
 ```yaml
 # Record the results i.e. significance etc.
 [outputdir]/[tag]_calibrated_fit
+# The JSON fils will contain the final q value {"q": XXXXXX} 
 # Distribution plots
 [outputdir]/[tag]_calibrated_fit/plots
 ```
@@ -346,7 +352,7 @@ The most time-consuming part is the generative model training and prediction, wh
 | **Step**            | **Hardware Configuration** | **Estimated Runtime**           | **Notes** | **paper settings**                                                       |
 |---------------------|----------------------------|---------------------------------|------|--------------------------------------------------------------------------|
 | 3.3 **Train Gen Model** | 1 × A100 40GB              | 20~30 mins / training           | Cluster setup used in this work | 5 fold x 8 boostrap x 2 channel (OS/SS)                                  |
-|3.4 **Generate Pseudo-data** | 1 × A100 40GB              | O(3~10k) gen events / min       | Cluster setup used in this work | O(10^7) sample x 8 boostrap x 2channel (OS/SS)                           |
+|3.4 **Generate Pseudo-data** | 1 × A100 40GB              | O(3~10k) gen events / min       | Cluster setup used in this work | O(10^7) sample x 8 boostrap x 2 channel (OS/SS)                           |
 | 3.6 **Train Classifier** | 1 × CPU                    | 5~10 mins / cross-fold-training | Cluster setup used in this work | 8 boostrap x 200 toys x 2 channel (OS/SS)                                |
 | 3.7 **Evaluation**       | 1 × CPU                    | 5~7 mins / evaluation           | Cluster setup used in this work | 8 boostrap x 200 toys x 2 train channel (OS/SS) x 2 test channel (OS/SS) |
 
